@@ -1,0 +1,85 @@
+.right {
+  position: absolute;
+  top: 50px;
+  right: 355px;
+  width: 302px;
+  height: 500px;
+  
+  padding: 10px;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19);
+}
+.left {
+  position: absolute;
+  top: 50px;
+  left: 355px;
+  width: 302px;
+  height: 500px;
+  
+  padding: 10px;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+.container {
+  height: 100vh;
+  width: 100%;
+  background-image: url(../state_uni.jpg);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow-x: hidden;
+
+}
+
+.buttons {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  top: 50%;
+  left: 50%;
+}
+
+
+.left img {
+  width: 100%;
+  height: auto;
+  position: center;
+}
+
+.right .btn {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: green;
+  color: white;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+}
+.right .btn1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: green;
+  color: white;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.right .btn:hover {
+  background-color: yellow;
+}
+.right .btn1:hover {
+  background-color: yellow;
+}
