@@ -20,6 +20,7 @@ body {
 }
 
 #wrapper #content-wrapper {
+  background-color: #21C37C;
   overflow-x: hidden;
   width: 100%;
   padding-top: 1rem;

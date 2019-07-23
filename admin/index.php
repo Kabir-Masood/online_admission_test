@@ -6,13 +6,16 @@
 </head>
 <body>
 
-
-<div class="container">
-	<div class="buttons">
-		<button><a href="admin_login.php">Admin</a></button>
-		<button><a href="applicant_login.php">Student</a></button>
+	<div class="container">
+		<div class="buttons">
+			<a href="admin_login.php" class="btn-admin">
+				<span class="btn-text-admin">Admin</span>
+			</a>
+			<a href="applicant_login.php" class="btn-applicant">
+				<span class="btn-text-applicant">Applicant</span>
+			</a>
+		</div>
 	</div>
-</div>
 
 </body>
 </html>

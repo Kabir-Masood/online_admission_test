@@ -2,27 +2,27 @@
 <html lang="en">
 
 <?php 
-include_once __DIR__ . '/model/Applicant.php';
-include_once __DIR__ . '/model/Program.php';
+include_once __DIR__ . '/model/Question.php';
+include_once __DIR__ . '/model/ExamInfo.php';
 include_once __DIR__ . '/Classes/PHPExcel.php';
 include_once __DIR__ . '/Classes/PHPExcel/IOFactory.php';
 
-$mApplicant = new Applicant();
-$mProgram = new Program();
+$mQuestion = new Question();
+$mExamInfo = new ExamInfo();
 
 if (!empty($_POST)) {
-	$applicant_id = htmlentities($_POST['applicant_id'], ENT_QUOTES);
-	$password = htmlentities($_POST['password'], ENT_QUOTES);
-	$program_tbl_id = htmlentities($_POST['program_tbl_id'], ENT_QUOTES);
-	$year = htmlentities($_POST['year'], ENT_QUOTES);
-	$semester = htmlentities($_POST['semester'], ENT_QUOTES);
-	$payment = htmlentities($_POST['payment'], ENT_QUOTES);
-	$is_exam_given = htmlentities($_POST['is_exam_given'], ENT_QUOTES);
+	$exam_tbl_id = htmlentities($_POST['exam_tbl_id'], ENT_QUOTES);
+	$q_desc = htmlentities($_POST['q_desc'], ENT_QUOTES);
+	$op1 = htmlentities($_POST['op1'], ENT_QUOTES);
+	$op2 = htmlentities($_POST['op2'], ENT_QUOTES);
+	$op3 = htmlentities($_POST['op3'], ENT_QUOTES);
+	$op4 = htmlentities($_POST['op4'], ENT_QUOTES);
+	$correct_ans = htmlentities($_POST['correct_ans'], ENT_QUOTES);
 
-	if (!empty($applicant_id) && !empty($password) && !empty($program_tbl_id) && !empty($year) && !empty($semester)/* && !empty($payment) && !empty($is_exam_given)*/) {
+	if (!empty($exam_tbl_id) && !empty($q_desc) && !empty($op1) && !empty($op2) && !empty($op3) && !empty($op4) && !empty($correct_ans)) {
 
-		$mApplicant->save_applicant($applicant_id, $password, $program_tbl_id, $year, $semester, $payment, $is_exam_given);
-		header("location: applicant.php");
+		$mQuestion->save_question($exam_tbl_id, $q_desc, $op1, $op2, $op3, $op4, $correct_ans);
+		header("location: question.php");
 	} else {
 		echo '<script language="javascript">';
         echo 'alert("Please insert all data first. ")';
@@ -71,22 +71,23 @@ if(isset($_POST['SubmitButton'])){
             foreach ($rowData as $datum) {
                 foreach ($datum as $item) {
 
-                    $applicant_id = $item[0];
-                    $password = $item[1];
-                    $program_tbl_id = $item[2];
-                    $year = $item[3];
-                    $semester = $item[4];
-                    $payment = $item[5];
-                    $is_exam_given = $item[6];
+                    $exam_tbl_id = $item[0];
+                    $q_desc = $item[1];
+                    $op1 = $item[2];
+                    $op2 = $item[3];
+                    $op3 = $item[4];
+                    $op4 = $item[5];
+                    $correct_ans = $item[6];
                     
-                    $mApplicant->save_applicant($applicant_id, $password, $program_tbl_id, $year, $semester, $payment, $is_exam_given);
+                    $mQuestion->save_question($exam_tbl_id, $q_desc, $op1, $op2, $op3, $op4, $correct_ans);
+
                 }
             }
 
             echo '<script language="javascript">';
             echo 'alert("Successfully saved!")';
             echo '</script>';
-            header("location:applicant.php");
+            header("location:question.php");
         }else{
             echo '<script language="javascript">';
             echo 'alert("Please select a valid xlsx file then try again. ")';
@@ -111,7 +112,7 @@ if(isset($_POST['SubmitButton'])){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
-	<title>Online Admission Test - Add Applicant</title>
+	<title>Online Admission Test - Add Question</title>
 
 	<!-- Bootstrap core CSS-->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -142,107 +143,73 @@ if(isset($_POST['SubmitButton'])){
 	    	<div class="container-fluid">
 	    		<ol class="breadcrumb">
 	    			<li class="breadcrumb-item">
-	    				<a href="add_applicant.php">Dashboard</a>
+	    				<a href="add_question.php">Dashboard</a>
 	    			</li>
-	    			<li class="breadcrumb-item active">Add New Applicant
+	    			<li class="breadcrumb-item active">Add New Question
 	    			</li>
 	    		</ol>
 
 	    		<div class="card mb-3">
 	    			<div class="card-header">
 	    				<i class="fas fa-table"></i>
-	    				Add New Applicant
+	    				Add New Question
 	    			</div>
 	    			<div class="card-body">
 	    				<div class="table-responsive">
-	    					<h2>Applicant Creation Form</h2>
-	    					<form action="add_applicant.php" method="post">
+	    					<h2>Question insertion form</h2>
+	    					<form action="add_question.php" method="post">
 	    						<div class="form-group">
-	    							<label for="text">Applicant ID:</label>
-	    							<input type="text" class="form-control" id="applicant_id" name="applicant_id" placeholder="Enter applicant id" required="required">
-	    						</div>
-	    						<div class="form-group">
-	    							<label for="text">Password:</label>
-	    							<input type="text" class="form-control" id="password" name="password" placeholder="Enter password" required="required">
-	    						</div>
-	    						<div class="form-group">
-	                                <label for="text">Program:</label>
-	                                <select class="form-group" name="program_tbl_id" id="program_tbl_id" required="required">
+	    							<label for="text">Exam ID:</label>
+	                                <select class="form-group" name="exam_tbl_id" id="exam_tbl_id" required="required">
 	                                    <option value="0" disabled selected="selected"
-	                                            style="float: left; background-color: white">Select Program
+	                                            style="float: left; background-color: white">Select Exam ID
 	                                    </option>
 	                                    <?php
-	                                    $programs = $mProgram->get_all_program();
-	                                    foreach($programs as $singleProgram){
-	                                        echo '<option value="'.$singleProgram["program_tbl_id"].'" style="background-color: white">'.$singleProgram["program_name"].'</option>';
+	                                    $examData = $mExamInfo->get_all_exam_info();
+	                                    foreach($examData as $singleExamData){
+	                                        echo '<option value="'.$singleExamData["exam_tbl_id"].'" style="background-color: white">'.$singleExamData["exam_tbl_id"].'</option>';
 	                                    }
 	                                    ?>
 	                                </select>
+	    						</div>
+	    						<div class="form-group">
+	    							<label for="text">Question Description:</label>
+	    							<input type="text" class="form-control" id="q_desc" name="q_desc" placeholder="Enter question description" required="required">
+	    						</div>
+	    						<div>
+	    							<label for="text">First option:</label>
+	    							<input type="text" class="form-control" id="op1" name="op1" placeholder="Enter first option" required="required" style="width: 400px">
+	    						</div>
+	    						<div>
+	    							<label for="text">Second option:</label>
+	    							<input type="text" class="form-control" id="op2" name="op2" placeholder="Enter second option" required="required" style="width: 400px">
+	    						</div>
+	    						<div>
+	    							<label for="text">Third option:</label>
+	    							<input type="text" class="form-control" id="op3" name="op3" placeholder="Enter third option" required="required" style="width: 400px">
+	    						</div>
+	    						<div>	
+	    							<label for="text">Fourth option:</label>
+	    							<input type="text" class="form-control" id="op4" name="op4" placeholder="Enter fourth option" required="required" style="width: 400px">
+	    						</div>
+	    						<div>	
+	    							<label for="text">Correct Answer:</label>
+	    							<input type="text" class="form-control" id="correct_ans" name="correct_ans" placeholder="Enter correct answer" required="required" style="width: 400px">
                             	</div>
-                            	<div class="form-group">
-	                                <label for="text">Semester:</label>
-	                                <select class="form-group" name="semester" id="semester" required="required">
-	                                    <option value="0" disabled selected="selected"
-	                                            style="float: left; background-color: white">Select Semester
-	                                    </option>
-	                                    <option value="Spring">Spring</option>
-	                                    <option value="Summer">Summer</option>
-	                                    <option value="Fall">Fall</option>
-	                                </select>
 
-	                                <label for="text">Year:</label>
-	                                <select class="form-group" name="year" id="year" required="required">
-	                                    <option value="0" disabled selected="selected"
-	                                            style="float: left; background-color: white">Select Year
-	                                    </option>
-	                                    <option value="2019">2019</option>
-	                                    <option value="2020">2020</option>
-	                                    <option value="2021">2021</option>
-	                                    <option value="2022">2022</option>
-	                                    <option value="2023">2023</option>
-	                                    <option value="2024">2024</option>
-	                                    <option value="2025">2025</option>
-	                                    <option value="2026">2026</option>
-	                                    <option value="2027">2027</option>
-	                                    <option value="2028">2028</option>
-	                                    <option value="2029">2029</option>
-	                                    <option value="2030">2030</option>
-	                                </select>
-	                                
-                            	</div>
-                            	<div class="form-group">
-                            		<label for="text">Payment Status:</label>
-                            		<select class="form-group" name="payment" id="payment" required="required">
-                            			<!-- <option value="" disabled selected="selected"
-	                                            style="float: left; background-color: white">Select payment status
-	                                    </option> -->
-                            			<option value="1">Yes</option>
-                            			<option value="0">No</option>
-                            		</select>
-                            	
-                            		<label for="text">Is Exam Given:</label>
-                            		<select class="form-group" name="is_exam_given" id="is_exam_given" required="required">
-                            			<!-- <option value="" disabled selected="selected"
-	                                            style="float: left; background-color: white">Select exam status
-	                                    </option> -->
-                            			<option value="1">Yes</option>
-                            			<option value="0">No</option>
-                            		</select>
-                            	</div>
-                            	
-	    						<button type="reset" class="btn btn-danger">Reset</button>
-	    						<button type="submit" class="btn btn-primary">Submit</button>
+	    						<button type="reset" class="btn btn-danger" style="margin-top: 15px">Reset</button>
+	    						<button type="submit" class="btn btn-primary" style="margin-top: 15px">Submit</button>
 	    					</form>
 
 	    					<br><br>
-	                        <h2>Upload applicant list from xlsx spreadsheet:</h2>
+	                        <h2>Upload question list from xlsx spreadsheet:</h2>
 	                        <form action="" method="post" enctype="multipart/form-data">
 	                            <input type="file"  name="filepath" id="filepath"/></td><td>
 	                                <input type="submit" name="SubmitButton" class="btn btn-primary" value="submit"/>
 	                        </form>
 
 	                        <div style="margin-top: 10px; color: green">
-                                <p>Download sample file: <a href="download.php?file=add_applicant.xlsx">Click here</a></p>
+                                <p>Download sample file: <a href="download.php?file=question_list.xlsx">Click here</a></p>
                             </div>
 	    				</div>
 	    			</div>

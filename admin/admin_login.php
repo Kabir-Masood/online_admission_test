@@ -24,53 +24,43 @@
 </head>
 <body>
 
-<!------ Include the above in your HEAD tag ---------->
-<div class="bg-image"></div>
-<div class="wrapper fadeInDown">
-  <div id="formContent">
-    <!-- Tabs Titles -->
-
-    <!-- Icon -->
-    <div class="fadeIn first">
-      <img src="Images/logo.png" id="icon" alt="User Icon" />
-      <h1>ADMIN</h1>
+  <div class="form-area">
+    <div class="img-area">
+      <img src="Images/admin_avatar.png" alt="">
     </div>
-
-    <!-- Login Form -->
-    <form method="post" name="admin_login">
-      <input type="text" id="user_id" class="fadeIn second" name="user_id" placeholder="User_ID" required="required">
-      <input type="text" id="password" class="fadeIn third" name="password" placeholder="password" required="required">
-      <input type="submit" class="fadeIn fourth" name="admin_login" value="Log In">
+    <h2>ADMIN</h2>
+    
+    <form action="admin_login.php" method="post">
+      <p>Your ID: </p>
+      <input type="text" name="user_id" class="input-area" placeholder="Enter your user ID" required="required">
+      <p>Your Password: </p>
+      <input type="password" name="password" class="input-area" placeholder="Enter your password" required="required">
+      <input type="submit" class="btn-login" name="admin_login" value="Log In">
     </form>
-    <?php 
-      $mAdmin = new Admin();
-      if (isset($_POST['admin_login'])) {
-        $user_id = $_POST['user_id'];
-        $password = $_POST['password'];
-
-        if (isset($user_id) && isset($password)) {
-          $adminData = $mAdmin->adminLogin($user_id, $password);
-
-          if (isset($adminData) && count($adminData) > 0) {
-            $_SESSION['isLogged'] = true;
-            $_SESSION['login_user_id'] = $adminData['id'];
-            header("location:admin_home.php");
-          } else {
-              echo "User not found!";
-          }
-        } else {
-            echo "User id and password must be provided!";
-        }
-      }
-     ?>
-
-    <!-- Remind Passowrd -->
-    <div id="formFooter">
-      <a class="underlineHover" href="#">Forgot Password?</a>
-    </div>
 
   </div>
-</div>
+
+<?php 
+  $mAdmin = new Admin();
+  if (isset($_POST['admin_login'])) {
+    $user_id = $_POST['user_id'];
+    $password = $_POST['password'];
+
+    if (isset($user_id) && isset($password)) {
+      $adminData = $mAdmin->adminLogin($user_id, $password);
+
+      if (isset($adminData) && count($adminData) > 0) {
+        $_SESSION['isLogged'] = true;
+        $_SESSION['login_user_id'] = $adminData['id'];
+        header("location:admin_home.php");
+      } else {
+          echo "User not found!";
+      }
+    } else {
+        echo "User id and password must be provided!";
+    }
+  }
+?>
 
 </body>
 </html>

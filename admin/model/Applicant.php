@@ -39,6 +39,13 @@ class Applicant extends Database
         return true;
     }
 
+    public function update_applicant_payment($id)
+    {
+        $queryString = "UPDATE tbl_applicant SET payment = '1' WHERE applicant_id = '$id' ";
+        $this->query($queryString);
+        return true;
+    }
+
     public function applicantLogin($applicant_user_id, $password)
     {
         $queryString = "select * from tbl_applicant where applicant_id = '$applicant_user_id' and  password = '$password' and payment = '1' and is_exam_given = '0'";

@@ -2,7 +2,10 @@
 <html lang="en">
 
 <?php include_once __DIR__ . '/model/ExamInfo.php';
-include_once __DIR__ . '/model/Program.php'
+include_once __DIR__ . '/model/Program.php';
+include_once __DIR__ . '/model/Question.php';
+include_once __DIR__ . '/Classes/PHPExcel.php';
+include_once __DIR__ . '/Classes/PHPExcel/IOFactory.php'
 ?>
 
 <head>
@@ -58,7 +61,7 @@ include_once __DIR__ . '/model/Program.php'
                 <div class="card-body">
                     <div class="table-responsive">
                         <h2>Exam Setup Form</h2>
-                        <form action="exam_setup.php" method="post">
+                        <form action="exam_setup.php" method="post"  enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="text">Choose Program:</label>
                                 <select class="form-group" name="program_tbl_id" id="program_tbl_id" required="required">
@@ -73,17 +76,48 @@ include_once __DIR__ . '/model/Program.php'
                                         }
                                     ?>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="text">Semester:</label>
+                                <select class="form-group" name="semester" id="semester" required="required">
+                                    <option value="0" disabled selected="selected"
+                                            style="float: left; background-color: white">Select Semester
+                                    </option>
+                                    <option value="Spring">Spring</option>
+                                    <option value="Summer">Summer</option>
+                                    <option value="Fall">Fall</option>
+                                </select>
 
-                                <h2>Upload question from xlsx spreadsheet:</h2>
-                                <form action="" method="post" enctype="multipart/form-data">
+                                <label for="text">Year:</label>
+                                <select class="form-group" name="year" id="year" required="required">
+                                    <option value="0" disabled selected="selected"
+                                            style="float: left; background-color: white">Select Year
+                                    </option>
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                    <option value="2029">2029</option>
+                                    <option value="2030">2030</option>
+                                </select>        
+                            </div>
+                            <div>
+                                <h4>Upload question from xlsx spreadsheet:</h4>
                                     <input type="file"  name="filepath" id="filepath"/></td><td>
-                                </form>
-
                                 <br><br>
+                            </div>
 
                                 <button type="reset" class="btn btn-danger">Reset</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" name="SubmitButton" class="btn btn-primary">Submit</button>
 
+                            <div style="margin-top: 10px; color: green">
+                                <p>Download sample file: <a href="download.php?file=exam_setup.xlsx">Click here</a></p>
                             </div>
                         </form>
                     </div>
@@ -140,3 +174,85 @@ include_once __DIR__ . '/model/Program.php'
 
 </body>
 </html>
+
+<?php
+
+if(isset($_POST['SubmitButton'])){
+    try {       //attached file formate 
+
+        $mExamInfo = new ExamInfo();
+        $mQuestion = new Question();
+
+
+        $program_tbl_id = $_POST['program_tbl_id'];
+        $year = $_POST['year'];
+        $semester = $_POST['semester'];
+
+        $mExamInfo->save_exam_info($program_tbl_id, $year, $semester, 0);
+        
+        $examTableId = implode($mExamInfo->getExamIdByProgramIdYearSemester($program_tbl_id, $year, $semester));
+
+        $new_id = 1;
+        $up_filename=$_FILES["filepath"]["name"];
+        $file_basename = substr($up_filename, 0, strripos($up_filename, '.')); // strip extention
+        $file_ext = substr($up_filename, strripos($up_filename, '.')); // strip name
+        $f2 = $file_basename . $file_ext;
+
+        $needle = "xlsx";
+        if( strpos( $f2, $needle ) !== false) {
+            move_uploaded_file($_FILES["filepath"]["tmp_name"], $f2);
+
+            $inputFileName = $f2;
+
+            try {
+                $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
+                $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+                $objPHPExcel = $objReader->load($inputFileName);
+            } catch (Exception $e) {
+                die('Error loading file"' . pathinfo($inputFileName, PATHINFO_BASENAME) . '": ' . $e->getMessage());
+            }
+//  Get worksheet dimensions
+            $sheet = $objPHPExcel->getSheet(0);
+            $highestRow = $sheet->getHighestRow();
+            $highestColumn = $sheet->getHighestColumn();
+            $rowData = array();
+            for ($row = 2; $row <= $highestRow; $row++) {
+                //  Read a row of data into an array
+                $rowData[] = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                    NULL,
+                    TRUE,
+                    FALSE);
+            }
+
+//print_r($rowData);
+//echo $rowData[0][0][1];
+
+            foreach ($rowData as $datum) {
+                foreach ($datum as $item) {
+
+                    $q_desc = $item[0];
+                    $op1 = $item[1];
+                    $op2 = $item[2];
+                    $op3 = $item[3];
+                    $op4 = $item[4];
+                    $correct_ans = $item[5];
+                    
+                    $mQuestion->save_question($examTableId, $q_desc, $op1, $op2, $op3, $op4, $correct_ans);
+                }
+            }
+            echo '<script language="javascript">';
+            echo 'alert("Successfully saved!")';
+            echo '</script>';
+            //header("location:question.php");
+        }else{
+            echo '<script language="javascript">';
+            echo 'alert("Please select a valid xlsx file then try again. ")';
+            echo '</script>';
+        }
+    }
+    catch(Exception $e) {
+        $error_message = $e->getMessage();
+    }
+}
+
+?>

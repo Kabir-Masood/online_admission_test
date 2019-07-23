@@ -16,6 +16,14 @@ class ExamInfo extends Database
         $this->query($queryString);
     }
 
+    public function getExamIdByProgramIdYearSemester($program_tbl_id, $year, $semester)
+    {
+        $queryString = "select exam_tbl_id from tbl_exam_info WHERE program_tbl_id = '$program_tbl_id' AND year = '$year' AND semester = '$semester'";
+        $q = $this->query($queryString);
+        $data = $this->fetch_assoc($q);
+        return $data;
+    }
+
     public function get_all_exam_info()
     {
         $queryString = "select * from tbl_exam_info";

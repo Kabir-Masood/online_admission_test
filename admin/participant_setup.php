@@ -7,6 +7,14 @@ include_once __DIR__ . '/model/Program.php';
 
 $mParticipant = new Applicant();
 
+if(isset($_POST['SubmitButton'])){
+    $id = $_POST['is_paid'];
+    foreach ($id as $ID){ 
+        /*echo $ID."<br />";*/
+        $mParticipant->update_applicant_payment($ID);
+    }
+}
+
 ?>
 
 <head>
@@ -61,7 +69,7 @@ $mParticipant = new Applicant();
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <form action="applicant.php" method="post">
+                        <form action="participant_setup.php" method="post">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
@@ -89,14 +97,14 @@ $mParticipant = new Applicant();
 
 
                                             echo "<td>". $applicant['semester']. "-" . $applicant['year']. "</td>";
-                                            echo "<td>". "<input type='checkbox' id='is_paid' name='is_paid' ".(isset($_POST['is_paid'])?"checked='checked'":"")." value='".'1'."'/>" ."</td>";
+                                            echo "<td>". "<input type='checkbox' id='is_paid' name='is_paid[]' value='". $applicant['applicant_id'] ."'/>" ."</td>";
                                         echo "</tr>";
                                     endforeach;
                                      ?>
                                 </tbody>
                             </table>
 
-                            <button class="btn btn-success" type="submit" style="float: right">OK</button>
+                            <button class="btn btn-success" type="submit" name="SubmitButton" style="float: right">OK</button>
 
                         </form>
                     </div>
@@ -107,8 +115,6 @@ $mParticipant = new Applicant();
         
     </div>
 </div>
-
-
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

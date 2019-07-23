@@ -12,7 +12,7 @@ class Question extends Database
 {
     public function save_question($exam_tbl_id, $q_desc, $op1, $op2, $op3, $op4, $correct_ans)
     {
-        $queryString = "insert into tbl_admin(exam_tbl_id, q_desc, op1, op2, op3, op4, correct_ans) values('$exam_tbl_id', '$q_desc', '$op1', '$op2', '$op3', '$op4', '$correct_ans');";
+        $queryString = "insert into tbl_question(exam_tbl_id, q_desc, op1, op2, op3, op4, correct_ans) values('$exam_tbl_id', '$q_desc', '$op1', '$op2', '$op3', '$op4', '$correct_ans');";
         $this->query($queryString);
     }
 

@@ -61,6 +61,7 @@ include_once __DIR__ . '/model/Program.php'
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Program Name</th>
                                     <th>Semester</th>
                                     <th>Exam Status</th>
@@ -72,6 +73,8 @@ include_once __DIR__ . '/model/Program.php'
                                 $examInfo = $mExamInfo->get_all_exam_info();
                                 foreach($examInfo as $data):
                                     echo "<tr>";
+                                        echo "<td>". $data['exam_tbl_id']. "</td>";
+
                                         $mProgram = new Program();
                                         $programRow = $mProgram->get_single_program($data['program_tbl_id']);
                                           if(isset($programRow)){

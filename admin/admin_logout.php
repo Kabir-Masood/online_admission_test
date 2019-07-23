@@ -4,7 +4,7 @@
 if(isset($_SESSION['isLogged']) && $_SESSION['isLogged'] == true){
     unset($_SESSION['isLogged']);
     unset($_SESSION['login_user']);
-    header("location:admin_login.php");
+    header("location:index.php");
     echo 'Session destroyed. ';
     session_destroy();
 }
