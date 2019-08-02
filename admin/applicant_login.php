@@ -41,6 +41,7 @@
 
 <?php 
   $mApplicant = new Applicant();
+
   if (isset($_POST['applicant_login'])) {
     $user_id = $_POST['user_id'];
     $password = $_POST['password'];
@@ -51,7 +52,7 @@
       if (isset($applicantData) && count($applicantData) > 0) {
         $_SESSION['isLogged'] = true;
         $_SESSION['login_user_id'] = $applicantData['id'];
-        header("location:applicant_home.php");
+        header("location:applicant_home.php?id=$user_id");
       } else {
           echo "User not found!";
       }

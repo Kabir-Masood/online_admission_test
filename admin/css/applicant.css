@@ -38,8 +38,36 @@ section .content h2 {
 	color: #5CAB48;
 	font-size: 3em;
 }
-section .content p {
+section .content a {
 	margin-top: 20px;
-	color: #fff;
 	font-size: 1.2em;
+}
+.background {
+	height: 100vh;
+  	width: 100%;
+  	background-image: url(Images/background.jpg);
+  	background-size: cover;
+  	background-position: center;
+  	position: relative;
+  	overflow-x: hidden;
+}
+.starttest p{
+	font-family: "Times New Roman", Georgia, Serif;
+		font-size: 23px;
+		color:#030709;
+}
+.starttest ul{
+	font-family: "Times New Roman", Georgia, Serif;
+		font-size: 23px;
+		color:#2d4756;
+}
+.starttest h2{
+	font-family: "Times New Roman", Georgia, Serif;
+		font-size: 25px;
+		color:#121069;
+}
+.starttest h3{
+	font-family: "Times New Roman", Georgia, Serif;
+		font-size: 23px;
+		color:#2d4756;
 }

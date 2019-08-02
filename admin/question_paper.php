@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+
+?>
 <head>
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,52 +21,38 @@
     <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="css/applicant.css" rel="stylesheet">
+    <link href="css/applicant.css" rel="stylesheet" type="text/css">
 
 </head>
 
-<?php
-include_once "utils_applicant.php";
-if (!isLoggedIn()) {
-    header("location:applicant_login.php");
-} else {
-    $id = 0;
-    if (!empty($_GET)) {
-        $id = htmlentities($_GET['id'], ENT_QUOTES);
-    }
+<body style="background-image: url(Images/background.jpg);">
+    <nav class="navbar navbar-expand navbar-dark bg-success static-top">
+        <a class="navbar-brand mr-1" href="applicant_home.php">Online Admission Test</a>
+    
+        <?php include_once 'common_views/applicant_options.php'; ?>
+    </nav>
 
-}
-?>
 
-<body style="background-color: #56B83D">
 
-<section>
-    <div class="content">
-        <h2>Online Admission Test</h2>
-        <a href="start_test.php">Start Exam Now</a>
-    </div>
-</section>
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="applicant_logout.php">Logout</a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="applicant_logout.php">Logout</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-
 
 <!-- Bootstrap core JavaScript-->
 <script src="vendor/jquery/jquery.min.js"></script>
