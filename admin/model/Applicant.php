@@ -32,6 +32,30 @@ class Applicant extends Database
         return $data;
     }
 
+    public function getProgram($id)
+    {
+        $query_string = "select program_tbl_id from tbl_applicant where applicant_id = '$id'";
+        $q = $this->query($query_string);
+        $data = $this->fetch_assoc($q);
+        return $data;
+    }
+
+    public function getYear($id)
+    {
+        $queryString = "select year from tbl_applicant WHERE applicant_id = '$id'";
+        $q = $this->query($queryString);
+        $data = $this->fetch_assoc($q);
+        return $data;
+    }
+
+    public function getSemester($id)
+    {
+        $queryString = "select semester from tbl_applicant WHERE applicant_id = '$id'";
+        $q = $this->query($queryString);
+        $data = $this->fetch_assoc($q);
+        return $data;
+    }
+
     public function update_applicant($id, $applicant_id, $password, $program_tbl_id, $year, $semester, $payment, $is_exam_given)
     {
         $queryString = "UPDATE tbl_applicant SET applicant_id = '$applicant_id', password = '$password', program_tbl_id = '$program_tbl_id', year = '$year', semester = '$semester', payment = '$payment', is_exam_given = '$is_exam_given' WHERE applicant_tbl_id = '$id' ";

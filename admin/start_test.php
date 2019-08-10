@@ -4,6 +4,10 @@
 <?php include_once __DIR__ . '/model/Question.php';
 
 $mQuestion = new Question();
+$id = 0;
+if (!empty($_GET)) {
+    $id = htmlentities($_GET['id'], ENT_QUOTES);
+}
 ?>
 <head>
 	<meta charset="utf-8">
@@ -56,7 +60,7 @@ $mQuestion = new Question();
                             <li><strong>Question Type : </strong> Multiple Choice</li>
                         </ul>
                         <h4>You will get only 1 hour for answering all questions.</h4>
-                        <a href="question_paper.php">Start Test</a>  
+                        <a href="<?php echo "question_paper.php?id=$id"?>">Start Test</a>  
                     </div>
                 </div>
             </div>

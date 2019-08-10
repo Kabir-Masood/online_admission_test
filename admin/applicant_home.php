@@ -40,7 +40,7 @@ if (!isLoggedIn()) {
 <section>
     <div class="content">
         <h2>Online Admission Test</h2>
-        <a href="start_test.php">Start Exam Now</a>
+        <a href="<?php echo "start_test.php?id=$id";?>">Start Exam Now</a>
     </div>
 </section>
 <!-- Logout Modal-->

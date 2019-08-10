@@ -40,4 +40,12 @@ class Question extends Database
         return $data;
     }
 
+    public function getQuestionByExamId($examID)
+    {
+        $queryString = "select * from tbl_question WHERE exam_tbl_id = '$examID'";
+        $q = $this->query($queryString);
+        $data = $this->fetch($q);
+        return $data;
+    }
+
 }
