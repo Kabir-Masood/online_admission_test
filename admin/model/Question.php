@@ -48,4 +48,12 @@ class Question extends Database
         return $data;
     }
 
+    public function get_correct_ans_by_q_id($q_id)
+    {
+        $queryString = "select correct_ans from tbl_question WHERE question_tbl_id = '$q_id'";
+        $q = $this->query($queryString);
+        $data = $this->fetch_assoc($q);
+        return $data;
+    }
+
 }

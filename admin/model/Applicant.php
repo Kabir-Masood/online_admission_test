@@ -28,7 +28,7 @@ class Applicant extends Database
     {
         $queryString = "select * from tbl_applicant WHERE applicant_tbl_id = '$id'";
         $q = $this->query($queryString);
-        $data = $this->fetch($q);
+        $data = $this->fetch_assoc($q);
         return $data;
     }
 
@@ -63,11 +63,26 @@ class Applicant extends Database
         return true;
     }
 
+    public function update_applicant_exam_status($id)
+    {
+        $queryString = "UPDATE tbl_applicant SET is_exam_given = '1' WHERE applicant_id = '$id' ";
+        $this->query($queryString);
+        return true;
+    }
+
     public function update_applicant_payment($id)
     {
         $queryString = "UPDATE tbl_applicant SET payment = '1' WHERE applicant_id = '$id' ";
         $this->query($queryString);
         return true;
+    }
+
+    public function getApplicantTableIdByApplicantId($applicant_id)
+    {
+        $queryString = "select applicant_tbl_id from tbl_applicant where applicant_id = '$applicant_id'";
+        $q = $this->query($queryString);
+        $data = $this->fetch_assoc($q);
+        return $data;
     }
 
     public function applicantLogin($applicant_user_id, $password)

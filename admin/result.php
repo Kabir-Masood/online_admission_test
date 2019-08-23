@@ -1,18 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include_once __DIR__ . '/model/Result.php' ?>
+<?php include_once __DIR__ . '/model/Result.php';
+include_once __DIR__ . '/model/Applicant.php';
+include_once __DIR__ . '/model/Program.php';
+
+$mResult = new Result();
+$mApplicant = new Applicant();
+$mProgram = new Program();
+
+if(isset($_POST['SubmitButton'])){
+    $id = $_POST['is_passed'];
+    foreach ($id as $ID){ 
+        /*echo $ID."<br />";*/
+        $mResult->update_remarks($ID);
+        header("location: result.php");
+    }
+}
+?>
 
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
-	<title>Online Admission Test - Result Information</title>
+    <title>Online Admission Test - Reports</title>
 
-	<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -28,69 +44,83 @@
 <body id="page-top">
 
 <nav class="navbar navbar-expand navbar-dark bg-success static-top">
-	<a class="navbar-brand mr-1" href="admin_home.php">Online Admission Test</a>
-	
-	<?php include_once 'common_views/admin_options.php'; ?>
+    <a class="navbar-brand mr-1" href="admin_home.php">Online Admission Test</a>
+    
+    <?php include_once 'common_views/admin_options.php'; ?>
 
 </nav>
 
 <div id="wrapper">
-	
-	<?php include_once 'common_views/sidebar_menu.php'; ?>
+    
+    <?php include_once 'common_views/sidebar_menu.php'; ?>
 
-	<div id="content-wrapper">
+    <div id="content-wrapper">
 
-		<div class="container-fluid">
+        <div class="container-fluid">
 
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item">
-					<a href="result.php">Dashboard</a>
-				</li>
-				<li class="breadcrumb-item active">Results</li>
-			</ol>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="view_report.php">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">Reports</li>
+            </ol>
 
-            <div class="card mb-3">
+            <div class="card md-3">
                 <div class="card-header">
-                    <i class="fas fa-table">Result List</i>
-                    <a style="float: right" href="add_result.php"><b>Add Result</b></a>
+                    <i class="fas fa-table">Reports</i>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <!-- <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Program Name</th>
-                                    <th>Department Code</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $mProgram = new Program();
-                                $programs = $mProgram->get_all_program();
-                                foreach($programs as $program):
-                                    echo "<tr>";
-                                        /*echo "<td>". $program['program_tbl_id']. "</td>";*/
-                                        echo "<td>". $program['program_name']. "</td>";
-                                        echo "<td>". $program['dept_code']. "</td>";
+                        <form action="view_report.php" method="post">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Applicant ID</th>
+                                        <th>Program</th>
+                                        <th>Semester</th>
+                                        <th>Mark</th>
+                                        <th>Remark</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
 
-                                        $id = $program['program_tbl_id'];
-                                        echo "<td>". "<a href='edit_program.php?id= $id'> Edit </a> " . "</td>";
-                                        echo "<td>". "<a href='delete_program.php?id= $id'> Delete </a> " . "</td>";
-                                    echo "</tr>";
-                                endforeach;
-                                ?>
-                            </tbody> -->
-                        </table>
+                                    $resultData = $mResult->get_all_result_by_remarks();
+                                    foreach ($resultData as $singleResultData):
+                                        echo "<tr>";
+
+                                            $applicantRow = $mApplicant->get_single_applicant($singleResultData['applicant_tbl_id']);
+                                              if(isset($applicantRow)){
+                                                  $applicantID = $applicantRow["applicant_id"];
+
+                                                  $programRow = $mProgram->get_single_program($applicantRow['program_tbl_id']);
+                                                  if (isset($programRow)) {
+                                                       $programName = $programRow["program_name"];
+                                                  }
+
+                                                  $applicantYear = $applicantRow["year"];
+                                                  $applicantSemester = $applicantRow["semester"];
+
+                                                  echo "<td>". $applicantID ."</td>";
+                                                  echo "<td>". $programName ."</td>";
+                                                  echo "<td>". $applicantSemester. "-". $applicantYear. "</td>";
+                                              }
+                                              echo "<td>". $singleResultData['marks']. "</td>";
+                                              echo "<td>". "Passed". "</td>";
+                                        echo "</tr>";
+                                    endforeach;
+                                     ?>
+                                </tbody>
+                            </table>
+                            <button class="btn btn-success" type="submit" name="SubmitButton" style="display: block; margin: 0 auto">OK</button>
+                        </form>
                     </div>
                 </div>
             </div>
 
-		</div>
-		
-	</div>
+        </div>
+        
+    </div>
 </div>
 
 

@@ -46,4 +46,12 @@ class Admin extends Database
         $this->query($queryString);
         return true;
     }
+
+    public function delete_admin($id)
+    {
+        $queryString = "DELETE from tbl_admin where admin_tbl_id = '$id'";
+        $q = $this->query($queryString);
+        $data = $this->fetch_assoc($q);
+        return $data;
+    }
 }

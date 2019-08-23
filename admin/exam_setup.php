@@ -105,6 +105,15 @@ include_once __DIR__ . '/Classes/PHPExcel/IOFactory.php'
                                     <option value="2028">2028</option>
                                     <option value="2029">2029</option>
                                     <option value="2030">2030</option>
+                                </select> 
+
+                                <label for="text">Exam Status:</label>
+                                <select class="form-group" name="exam_status" id="exam_status" required="required">
+                                    <option value="0" disabled selected="selected"
+                                            style="float: left; background-color: white">Select exam status
+                                    </option>
+                                    <option value="1">Enable</option>
+                                    <option value="0">Disable</option>
                                 </select>        
                             </div>
                             <div>
@@ -187,8 +196,9 @@ if(isset($_POST['SubmitButton'])){
         $program_tbl_id = $_POST['program_tbl_id'];
         $year = $_POST['year'];
         $semester = $_POST['semester'];
+        $exam_status = $_POST['exam_status'];
 
-        $mExamInfo->save_exam_info($program_tbl_id, $year, $semester, 0);
+        $mExamInfo->save_exam_info($program_tbl_id, $year, $semester, $exam_status);
         
         $examTableId = implode($mExamInfo->getExamIdByProgramIdYearSemester($program_tbl_id, $year, $semester));
 

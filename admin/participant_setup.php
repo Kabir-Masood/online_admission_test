@@ -104,7 +104,7 @@ if(isset($_POST['SubmitButton'])){
                                 </tbody>
                             </table>
 
-                            <button class="btn btn-success" type="submit" name="SubmitButton" style="float: right">OK</button>
+                            <button class="btn btn-success" type="submit" name="SubmitButton" style="display: block; margin: 0 auto">OK</button>
 
                         </form>
                     </div>

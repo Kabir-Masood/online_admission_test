@@ -66,7 +66,7 @@ include_once __DIR__ . '/model/Program.php'
                                     <th>Program</th>
                                     <th>Semester</th>
                                     <th>Payment</th>
-                                    <th>Exam Status</th>
+                                    <th>Is Exam Given</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>

@@ -2,12 +2,20 @@
 <html lang="en">
 
 <?php include_once __DIR__ . '/model/Question.php';
+include_once "utils_applicant.php";
 
 $mQuestion = new Question();
 $id = 0;
-if (!empty($_GET)) {
-    $id = htmlentities($_GET['id'], ENT_QUOTES);
+
+if (!isLoggedIn()) {
+    header("location:applicant_login.php");
+} else {
+    $id = 0;
+    if (!empty($_GET)) {
+        $id = htmlentities($_GET['id'], ENT_QUOTES);
+    }
 }
+
 ?>
 <head>
 	<meta charset="utf-8">
@@ -33,7 +41,7 @@ if (!empty($_GET)) {
 
 <body style="background-image: url(Images/background.jpg);">
     <nav class="navbar navbar-expand navbar-dark bg-success static-top">
-        <a class="navbar-brand mr-1" href="applicant_home.php">Online Admission Test</a>
+        <a class="navbar-brand mr-1" href="">Online Admission Test</a>
     
         <?php include_once 'common_views/applicant_options.php'; ?>
     </nav>

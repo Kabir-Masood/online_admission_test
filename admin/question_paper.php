@@ -5,12 +5,42 @@ include_once "utils_applicant.php";
 include_once __DIR__ . '/model/Question.php';
 include_once __DIR__ . '/model/ExamInfo.php';
 include_once __DIR__ . '/model/Applicant.php';
+include_once __DIR__ . '/model/Result.php';
+
+$mExamInfo = new ExamInfo();
+$mApplicant = new Applicant();
+$mResult = new Result();
+$mQuestion = new Question();
+
+$count = 0;
+
 if (!isLoggedIn()) {
     header("location:applicant_login.php");
 } else {
     $id = 0;
     if (!empty($_GET)) {
         $id = htmlentities($_GET['id'], ENT_QUOTES);
+    }
+}
+
+if (!empty($_POST)) {
+    if (isset($_POST['result'])) {
+        foreach ($_POST['radioOption'] as $option_num => $option_value) {
+            /*echo $option_num." ".$option_value."<br>";*/
+            $correct_ans = implode($mQuestion->get_correct_ans_by_q_id($option_num));
+            if ($option_value == $correct_ans) {
+                $count++;
+            }
+        }
+        /*echo $count;*/
+        $applicant_tbl_id = implode($mApplicant->getApplicantTableIdByApplicantId($id));
+        $mResult->save_result($applicant_tbl_id, $count);
+        $mApplicant->update_applicant_exam_status($id);
+
+        unset($_SESSION['isLogged']);
+        unset($_SESSION['login_user']);
+        header("location:applicant_login.php");
+        session_destroy();
     }
 }
 ?>
@@ -39,7 +69,7 @@ if (!isLoggedIn()) {
 
 <body style="background-image: url(Images/background.jpg);">
     <nav class="navbar navbar-expand navbar-dark bg-success static-top">
-        <a class="navbar-brand mr-1" href="applicant_home.php">Online Admission Test</a>
+        <a class="navbar-brand mr-1" href="">Online Admission Test</a>
     
         <?php include_once 'common_views/applicant_options.php'; ?>
     </nav>
@@ -63,15 +93,12 @@ if (!isLoggedIn()) {
                                 <?php
                                 $i = 1;
                                 
-                                $mApplicant = new Applicant();
                                 $applicantProgram = implode($mApplicant->getProgram($id));
                                 $applicantYear = implode($mApplicant->getYear($id));
                                 $applicantSemester = implode($mApplicant->getSemester($id));
 
-                                $mExamInfo = new ExamInfo();
                                 $examID = implode($mExamInfo->getExamIdByProgramIdYearSemester($applicantProgram,$applicantYear,$applicantSemester));
 
-                                $mQuestion = new Question();
                                 $questions = $mQuestion->getQuestionByExamId($examID);
 
                                 foreach($questions as $row) {
@@ -80,21 +107,61 @@ if (!isLoggedIn()) {
                                     <th scope="row"><?php echo $i++?> </th>
                                     <td><?=$row['q_desc'] ?></td>
                                     <td>
-                                        <input type="radio" name="radioOption[<?=$row['question_tbl_id']?>]" value="<?php echo isset($row['correct_ans']) ? '1' : (!empty($somethingelse) ? '0' : ''); ?>"><?= $row['op1'] ?>
+                                        <input type="radio" name="radioOption[<?=$row['question_tbl_id']?>]" value="<?= $row['op1'] ?>"><?= $row['op1'] ?>
                                     </td>
                                     <td>
-                                        <input type="radio" name="radioOption[<?=$row['question_tbl_id']?>]" value="<?php echo isset($row['correct_ans']) ? '1' : (!empty($somethingelse) ? '0' : ''); ?>"><?= $row['op2'] ?>
+                                        <input type="radio" name="radioOption[<?=$row['question_tbl_id']?>]" value="<?= $row['op2'] ?>"><?= $row['op2'] ?>
                                     </td>
                                     <td>
-                                        <input type="radio" name="radioOption[<?=$row['question_tbl_id']?>]" value="<?php echo isset($row['correct_ans']) ? '1' : (!empty($somethingelse) ? '0' : ''); ?>"><?= $row['op3'] ?>
+                                        <input type="radio" name="radioOption[<?=$row['question_tbl_id']?>]" value="<?= $row['op3'] ?>"><?= $row['op3'] ?>
                                     </td>
                                     <td>
-                                        <input type="radio" name="radioOption[<?=$row['question_tbl_id']?>]" value="<?php echo isset($row['correct_ans']) ? '1' : (!empty($somethingelse) ? '0' : ''); ?>"><?= $row['op4'] ?>
+                                        <input type="radio" name="radioOption[<?=$row['question_tbl_id']?>]" value="<?= $row['op4'] ?>"><?= $row['op4'] ?>
                                     </td>
                                 </tr>
                                 <?php } ?>
+                                <!-- <thead>
+                                    <tr>
+                                        <th>Question No</th>
+                                        <th>Question Description</th>
+                                        <th>A</th>
+                                        <th>B</th>
+                                        <th>C</th>
+                                        <th>D</th>
+                                    </tr>
+                                </thead>
+                            
+                                <tbody>
+                                    <?php
+
+                                    $i = 1;
+                                
+                                    $mApplicant = new Applicant();
+                                    $applicantProgram = implode($mApplicant->getProgram($id));
+                                    $applicantYear = implode($mApplicant->getYear($id));
+                                    $applicantSemester = implode($mApplicant->getSemester($id));
+
+                                    $mExamInfo = new ExamInfo();
+                                    $examID = implode($mExamInfo->getExamIdByProgramIdYearSemester($applicantProgram,$applicantYear,$applicantSemester));
+
+                                    $mQuestion = new Question();
+                                    $questions = $mQuestion->getQuestionByExamId($examID);
+
+                                    foreach ($questions as $singleQuestion):
+                                        echo "<tr>";
+                                            echo "<td>". $i++ . "</td>";
+                                            echo "<td>". $singleQuestion['q_desc']. "</td>";
+
+                                            echo "<td>". "<input type='radio' id='is_correct' name='is_correct[]' value='". $singleQuestion['op1'] ."'/>" .$singleQuestion['op1']."</td>";
+                                            echo "<td>". "<input type='radio' id='is_correct' name='is_correct[]' value='". $singleQuestion['op2'] ."'/>" .$singleQuestion['op2']."</td>";
+                                            echo "<td>". "<input type='radio' id='is_correct' name='is_correct[]' value='". $singleQuestion['op3'] ."'/>" .$singleQuestion['op3']."</td>";
+                                            echo "<td>". "<input type='radio' id='is_correct' name='is_correct[]' value='". $singleQuestion['op4'] ."'/>" .$singleQuestion['op4']."</td>";
+                                        echo "</tr>";
+                                    endforeach;
+                                     ?>
+                                </tbody> -->
                             </table>
-                            <input id="result" name="result" type="submit" value="submit" />
+                            <input class="btn btn-primary" name="result" type="submit" value="submit" />
                         </form>
                     </div>
                 </div>

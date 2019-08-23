@@ -1,8 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include_once __DIR__ . '/model/ExamInfo.php';
-include_once __DIR__ . '/model/Program.php'
+<?php include_once __DIR__ . '/model/Result.php';
+include_once __DIR__ . '/model/Applicant.php';
+include_once __DIR__ . '/model/Program.php';
+
+$mResult = new Result();
+$mApplicant = new Applicant();
+$mProgram = new Program();
+
+if(isset($_POST['SubmitButton'])){
+    $id = $_POST['is_passed'];
+    foreach ($id as $ID){ 
+        /*echo $ID."<br />";*/
+        $mResult->update_remarks($ID);
+        header("location: result.php");
+    }
+}
 ?>
 
 <head>
@@ -57,35 +71,50 @@ include_once __DIR__ . '/model/Program.php'
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <h2>Reports</h2>
-                        <!-- <form action="exam_setup.php" method="post">
-                            <div class="form-group">
-                                <label for="text">Choose Program:</label>
-                                <select class="form-group" name="program_tbl_id" id="program_tbl_id" required="required">
-                                    <option value="0" disabled selected="selected" style="float: left; background-color: white">Choose Program</option>
-                                    
+                        <form action="view_report.php" method="post">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Applicant ID</th>
+                                        <th>Program</th>
+                                        <th>Semester</th>
+                                        <th>Mark</th>
+                                        <th>Remark</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     <?php
-                                    
-                                    $mProgram = new Program();
-                                    $programs = $mProgram->get_all_program();
-                                        foreach($programs as $singleProgram){
-                                            echo '<option value="'.$singleProgram["program_tbl_id"].'" style="background-color: white">'.$singleProgram["program_name"].'</option>';
-                                        }
-                                    ?>
-                                </select>
 
-                                <h2>Upload question from xlsx spreadsheet:</h2>
-                                <form action="" method="post" enctype="multipart/form-data">
-                                    <input type="file"  name="filepath" id="filepath"/></td><td>
-                                </form>
+                                    $resultData = $mResult->get_all_result();
+                                    foreach ($resultData as $singleResultData):
+                                        echo "<tr>";
 
-                                <br><br>
+                                            $applicantRow = $mApplicant->get_single_applicant($singleResultData['applicant_tbl_id']);
+                                              if(isset($applicantRow)){
+                                                  $applicantID = $applicantRow["applicant_id"];
 
-                                <button type="reset" class="btn btn-danger">Reset</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                  $programRow = $mProgram->get_single_program($applicantRow['program_tbl_id']);
+                                                  if (isset($programRow)) {
+                                                       $programName = $programRow["program_name"];
+                                                  }
 
-                            </div>
-                        </form> -->
+                                                  $applicantYear = $applicantRow["year"];
+                                                  $applicantSemester = $applicantRow["semester"];
+
+                                                  echo "<td>". $applicantID ."</td>";
+                                                  echo "<td>". $programName ."</td>";
+                                                  echo "<td>". $applicantSemester. "-". $applicantYear. "</td>";
+                                              }
+                                              
+                                            echo "<td>". $singleResultData['marks'] ."</td>";
+                                            echo "<td>". "Passed". "---". "<input type='checkbox' name='is_passed[]' value='". $singleResultData['applicant_tbl_id'] ."'/>" ."</td>";
+                                        echo "</tr>";
+                                    endforeach;
+                                     ?>
+                                </tbody>
+                            </table>
+                            <button class="btn btn-success" type="submit" name="SubmitButton" style="display: block; margin: 0 auto">OK</button>
+                        </form>
                     </div>
                 </div>
             </div>
